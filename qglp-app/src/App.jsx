@@ -1,125 +1,25 @@
-// QGLP Alpha Engine - Enhanced UI with Styling
-// Tailwind CSS based clean UI
-
 import React, { useState, useMemo } from "react";
 
+// ---------------- DATA ----------------
 const stockData = [
-  {
-    name: "Adani Enterprises",
-    ticker: "ADANIENT",
-    pe: 45,
-    roe: 12,
-    growth: 25,
-    marketCap: 300000,
-    sector: "Conglomerate",
-    score: null
-  },
-  {
-    name: "Adani Power",
-    ticker: "ADANIPOWER",
-    pe: 18,
-    roe: 20,
-    growth: 15,
-    marketCap: 150000,
-    sector: "Power",
-    score: null
-  },
-  {
-    name: "ASK Automotive",
-    ticker: "ASKAUTOLTD",
-    pe: 28,
-    roe: 22,
-    growth: 18,
-    marketCap: 8000,
-    sector: "Auto Ancillary",
-    score: null
-  },
-  {
-    name: "EMS Limited",
-    ticker: "EMSLIMITED",
-    pe: 24,
-    roe: 30,
-    growth: 20,
-    marketCap: 6000,
-    sector: "Infra",
-    score: null
-  },
-  {
-    name: "Gravita India",
-    ticker: "GRAVITA",
-    pe: 16,
-    roe: 28,
-    growth: 22,
-    marketCap: 10000,
-    sector: "Recycling",
-    score: null
-  },
-  {
-    name: "IndiGo",
-    ticker: "INDIGO",
-    pe: 20,
-    roe: 18,
-    growth: 12,
-    marketCap: 120000,
-    sector: "Aviation",
-    score: null
-  },
-  {
-    name: "Larsen & Toubro",
-    ticker: "LT",
-    pe: 32,
-    roe: 16,
-    growth: 14,
-    marketCap: 400000,
-    sector: "Infra",
-    score: null
-  },
-  {
-    name: "Mazagon Dock",
-    ticker: "MAZDOCK",
-    pe: 35,
-    roe: 40,
-    growth: 25,
-    marketCap: 70000,
-    sector: "Defense",
-    score: null
-  },
-  {
-    name: "Paras Defence",
-    ticker: "PARAS",
-    pe: 70,
-    roe: 15,
-    growth: 30,
-    marketCap: 12000,
-    sector: "Defense",
-    score: null
-  },
-  {
-    name: "Polycab India",
-    ticker: "POLYCAB",
-    pe: 38,
-    roe: 25,
-    growth: 20,
-    marketCap: 200000,
-    sector: "Electricals",
-    score: null
-  },
-  {
-    name: "Urbanco",
-    ticker: "URBANCO",
-    pe: 22,
-    roe: 18,
-    growth: 16,
-    marketCap: 5000,
-    sector: "Real Estate",
-    score: null
-  }
+  { name: "Adani Enterprises", ticker: "ADANIENT", pe: 22.1, roe: 3.4, growth: 15, lastUpdated: "2026-05-03" },
+  { name: "Adani Power", ticker: "ADANIPOWER", pe: 38.1, roe: 20.6, growth: 12, lastUpdated: "2026-05-03" },
+  { name: "ASK Automotive", ticker: "ASKAUTOLTD", pe: 28.5, roe: 22.1, growth: 18, lastUpdated: "2026-05-03" },
+  { name: "EMS Limited", ticker: "EMSLIMITED", pe: 24.2, roe: 28.5, growth: 20, lastUpdated: "2026-05-03" },
+  { name: "Gravita India", ticker: "GRAVITA", pe: 31.5, roe: 17.6, growth: 21, lastUpdated: "2026-05-03" },
+  { name: "IndiGo", ticker: "INDIGO", pe: 20.0, roe: 25.0, growth: 15, lastUpdated: "2026-05-03" },
+  { name: "Larsen & Toubro", ticker: "LT", pe: 34.0, roe: 15.0, growth: 15, lastUpdated: "2026-05-03" },
+  { name: "Mazagon Dock", ticker: "MAZDOCK", pe: 45.0, roe: 35.0, growth: 25, lastUpdated: "2026-05-03" },
+  { name: "Paras Defence", ticker: "PARAS", pe: 65.0, roe: 12.0, growth: 25, lastUpdated: "2026-05-03" },
+  { name: "Polycab India", ticker: "POLYCAB", pe: 48.0, roe: 22.0, growth: 18, lastUpdated: "2026-05-03" },
+  { name: "Urbanco", ticker: "URBANCO", pe: 62.0, roe: 15.5, growth: 32, lastUpdated: "2026-05-03" },
 ];
 
 const COE = 13;
 
+// ---------------- LOGIC ----------------
 function calculatePEG(pe, growth) {
-  if (!growth) return null;
+  if (!growth || growth === 0) return null;
   return pe / growth;
 }
 
@@ -133,18 +33,22 @@ function scoreStock({ roe, growth, pe }) {
   const peg = calculatePEG(pe, growth);
   let score = 0;
 
+  // ROE
   if (roe > 25) score += 30;
   else if (roe > 20) score += 25;
   else if (roe > 15) score += 15;
 
+  // Growth
   if (growth > 25) score += 25;
   else if (growth > 15) score += 20;
   else if (growth > 10) score += 10;
 
+  // PEG
   if (peg && peg < 1) score += 30;
-  else if (peg < 1.5) score += 20;
-  else if (peg < 2) score += 10;
+  else if (peg && peg < 1.5) score += 20;
+  else if (peg && peg < 2) score += 10;
 
+  // PE penalty
   if (pe > 50) score -= 15;
   else if (pe > 35) score -= 10;
 
@@ -154,27 +58,40 @@ function scoreStock({ roe, growth, pe }) {
 function classify(stock) {
   const peg = calculatePEG(stock.pe, stock.growth);
 
-  if (stock.roe > 20 && stock.growth >= 15 && peg <= 1.5) return "Compounder";
-  if (stock.growth > 25 && stock.roe > COE && peg <= 2) return "High Growth";
+  if (stock.roe > 20 && stock.growth >= 15 && peg && peg <= 1.5)
+    return "Compounder";
+  if (stock.growth > 25 && stock.roe > COE && peg && peg <= 2)
+    return "High Growth";
   if (stock.pe < 21 && stock.roe > COE) return "Value";
   return "Avoid";
 }
 
+function marginOfSafety(pe, growth) {
+  if (!growth) return null;
+  const fairPE = growth * 1.5;
+  return ((fairPE - pe) / fairPE) * 100;
+}
+
 function tagColor(tag) {
   switch (tag) {
-    case "Compounder": return "bg-green-500/20 text-green-400";
-    case "High Growth": return "bg-blue-500/20 text-blue-400";
-    case "Value": return "bg-yellow-500/20 text-yellow-400";
-    default: return "bg-red-500/20 text-red-400";
+    case "Compounder":
+      return "bg-green-500/20 text-green-400";
+    case "High Growth":
+      return "bg-blue-500/20 text-blue-400";
+    case "Value":
+      return "bg-yellow-500/20 text-yellow-400";
+    default:
+      return "bg-red-500/20 text-red-400";
   }
 }
 
+// ---------------- UI ----------------
 export default function App() {
   const [minROE, setMinROE] = useState(0);
   const [maxPE, setMaxPE] = useState(100);
 
   const processed = useMemo(() => {
-    return stocksData
+    return stockData
       .map((s) => {
         const peg = calculatePEG(s.pe, s.growth);
         return {
@@ -183,14 +100,18 @@ export default function App() {
           score: scoreStock(s),
           value: valueCreation(s.roe),
           tag: classify(s),
+          mos: marginOfSafety(s.pe, s.growth),
         };
       })
-      .filter((s) => s.roe >= minROE && s.pe <= maxPE);
+      .filter((s) => s.roe >= minROE && s.pe <= maxPE)
+      .sort((a, b) => b.score - a.score);
   }, [minROE, maxPE]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white p-6">
-      <h1 className="text-3xl font-bold mb-6 text-cyan-400">QGLP Alpha Engine</h1>
+      <h1 className="text-3xl font-bold mb-6 text-cyan-400">
+        QGLP Alpha Engine
+      </h1>
 
       {/* Filters */}
       <div className="bg-gray-800 p-4 rounded-xl mb-6 flex gap-4 shadow-lg">
@@ -199,14 +120,14 @@ export default function App() {
           placeholder="Min ROE"
           value={minROE}
           onChange={(e) => setMinROE(Number(e.target.value))}
-          className="px-3 py-2 rounded bg-gray-900 border border-gray-700 focus:outline-none"
+          className="px-3 py-2 rounded bg-gray-900 border border-gray-700"
         />
         <input
           type="number"
           placeholder="Max PE"
           value={maxPE}
           onChange={(e) => setMaxPE(Number(e.target.value))}
-          className="px-3 py-2 rounded bg-gray-900 border border-gray-700 focus:outline-none"
+          className="px-3 py-2 rounded bg-gray-900 border border-gray-700"
         />
       </div>
 
@@ -221,18 +142,25 @@ export default function App() {
               <th>Growth</th>
               <th>PEG</th>
               <th>Score</th>
+              <th>MoS</th>
               <th>Tag</th>
             </tr>
           </thead>
           <tbody>
             {processed.map((s) => (
-              <tr key={s.ticker} className="border-t border-gray-700 hover:bg-gray-800 transition">
+              <tr
+                key={s.ticker}
+                className="border-t border-gray-700 hover:bg-gray-800 transition"
+              >
                 <td className="p-3 font-semibold">{s.ticker}</td>
                 <td>{s.pe}</td>
                 <td className="text-green-400">{s.roe}%</td>
                 <td>{s.growth}%</td>
-                <td>{s.peg?.toFixed(2)}</td>
+                <td>{s.peg ? s.peg.toFixed(2) : "-"}</td>
                 <td className="font-bold">{s.score}</td>
+                <td>
+                  {s.mos ? `${s.mos.toFixed(1)}%` : "-"}
+                </td>
                 <td>
                   <span className={`px-2 py-1 rounded text-xs ${tagColor(s.tag)}`}>
                     {s.tag}
