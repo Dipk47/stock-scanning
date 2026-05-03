@@ -3,11 +3,117 @@
 
 import React, { useState, useMemo } from "react";
 
-const stocksData = [
-  { ticker: "TCS", price: 3500, pe: 28, roe: 35, growth: 15, sector: "IT" },
-  { ticker: "HDFCBANK", price: 1600, pe: 22, roe: 18, growth: 18, sector: "Bank" },
-  { ticker: "DMART", price: 4200, pe: 80, roe: 22, growth: 30, sector: "Retail" },
-  { ticker: "INFY", price: 1500, pe: 26, roe: 28, growth: 12, sector: "IT" },
+const stockData = [
+  {
+    name: "Adani Enterprises",
+    ticker: "ADANIENT",
+    pe: 45,
+    roe: 12,
+    growth: 25,
+    marketCap: 300000,
+    sector: "Conglomerate",
+    score: null
+  },
+  {
+    name: "Adani Power",
+    ticker: "ADANIPOWER",
+    pe: 18,
+    roe: 20,
+    growth: 15,
+    marketCap: 150000,
+    sector: "Power",
+    score: null
+  },
+  {
+    name: "ASK Automotive",
+    ticker: "ASKAUTOLTD",
+    pe: 28,
+    roe: 22,
+    growth: 18,
+    marketCap: 8000,
+    sector: "Auto Ancillary",
+    score: null
+  },
+  {
+    name: "EMS Limited",
+    ticker: "EMSLIMITED",
+    pe: 24,
+    roe: 30,
+    growth: 20,
+    marketCap: 6000,
+    sector: "Infra",
+    score: null
+  },
+  {
+    name: "Gravita India",
+    ticker: "GRAVITA",
+    pe: 16,
+    roe: 28,
+    growth: 22,
+    marketCap: 10000,
+    sector: "Recycling",
+    score: null
+  },
+  {
+    name: "IndiGo",
+    ticker: "INDIGO",
+    pe: 20,
+    roe: 18,
+    growth: 12,
+    marketCap: 120000,
+    sector: "Aviation",
+    score: null
+  },
+  {
+    name: "Larsen & Toubro",
+    ticker: "LT",
+    pe: 32,
+    roe: 16,
+    growth: 14,
+    marketCap: 400000,
+    sector: "Infra",
+    score: null
+  },
+  {
+    name: "Mazagon Dock",
+    ticker: "MAZDOCK",
+    pe: 35,
+    roe: 40,
+    growth: 25,
+    marketCap: 70000,
+    sector: "Defense",
+    score: null
+  },
+  {
+    name: "Paras Defence",
+    ticker: "PARAS",
+    pe: 70,
+    roe: 15,
+    growth: 30,
+    marketCap: 12000,
+    sector: "Defense",
+    score: null
+  },
+  {
+    name: "Polycab India",
+    ticker: "POLYCAB",
+    pe: 38,
+    roe: 25,
+    growth: 20,
+    marketCap: 200000,
+    sector: "Electricals",
+    score: null
+  },
+  {
+    name: "Urbanco",
+    ticker: "URBANCO",
+    pe: 22,
+    roe: 18,
+    growth: 16,
+    marketCap: 5000,
+    sector: "Real Estate",
+    score: null
+  }
 ];
 
 const COE = 13;
